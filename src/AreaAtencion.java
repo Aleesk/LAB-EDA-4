@@ -20,7 +20,7 @@ public class AreaAtencion {
     }
 
     public void ingresarPaciente(Paciente p) {
-        pacientesHeap.add(p);
+        if (!estaSaturada()) pacientesHeap.add(p);
     }
 
     public Paciente atenderPaciente() {
@@ -32,6 +32,18 @@ public class AreaAtencion {
     }
 
     public List<Paciente> obtenerPacientesPorHeapSort() {
-        return pacientesHeap.stream().sorted().collect(Collectors.toList());
+        return pacientesHeap.stream().sorted(Comparator.comparingInt(Paciente::getCategoria).thenComparingLong(Paciente::getTiempoLlegada)).collect(Collectors.toList());
+    }
+
+    public static void main(String[] args) {
+        AreaAtencion area = new AreaAtencion("urgencia_adulto", 5);
+        Paciente p1 = new Paciente("Juanito", "Perez", "12345678-9", 3, System.currentTimeMillis(), "urgencia_adulto");
+        Paciente p2 = new Paciente("Martina", "Rodriguez", "98765432-1", 1, System.currentTimeMillis() - 600000, "urgencia_adulto");
+        area.ingresarPaciente(p1);
+        area.ingresarPaciente(p2);
+        System.out.println("Pacientes en heap: ");
+        for (Paciente p : area.obtenerPacientesPorHeapSort()) System.out.println(" - " + p);
+        System.out.println("Atender paciente: " + area.atenderPaciente());
+        System.out.println("Saturada: " + area.estaSaturada());
     }
 }

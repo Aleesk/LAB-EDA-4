@@ -3,18 +3,21 @@ import java.util.Stack;
 public class Paciente {
     private String nombre;
     private String apellido;
-    private int id;
+    private String id;
     private int categoria;
     private long tiempoLlegada;
     private String estado;
     private String area;
     private final Stack<String> historialCambios;
 
-    public Paciente(String nombre, String apellido, int id, long tiempoLlegada) {
+    public Paciente(String nombre, String apellido, String id, int categoria, long tiempoLlegada, String area) {
         this.nombre = nombre;
         this.apellido = apellido;
         this.id = id;
+        this.categoria = categoria;
         this.tiempoLlegada = tiempoLlegada;
+        this.estado = "en_espera";
+        this.area = area;
         this.historialCambios = new Stack<>();
     }
 
@@ -27,7 +30,7 @@ public class Paciente {
         return apellido;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
@@ -74,7 +77,7 @@ public class Paciente {
 
     // Métodos
     public long tiempoEsperaActual() {
-        return (System.currentTimeMillis() / 1000) - tiempoLlegada;
+        return (System.currentTimeMillis() / 1000 / 60) - (tiempoLlegada / 1000 / 60);
     }
 
     public void registrarCambio(String descripcion) {
@@ -82,13 +85,26 @@ public class Paciente {
     }
 
     public String obtenerUltimoCambio() {
-        return historialCambios.pop();
+        return historialCambios.isEmpty() ? null : historialCambios.pop();
     }
 
+    @Override
+    public String toString() {
+        return nombre + " " + apellido + " -> [id:" + id + ", categoria: " + categoria + ", estado: " + estado + ", area: " + area + "]";
+    }
+
+    // Test main
     public static void main(String[] args) {
-        Paciente p = new Paciente("Eduardo", "Vergara", 100, 3600000);
-        System.out.println(p.getNombre() + ":" + p.getTiempoLlegada());
-        Paciente p1 = new Paciente("Alexander", "Bravo", 100, 4000000);
-        System.out.println(p1.getNombre() + ":" + p1.getTiempoLlegada());
+        Paciente paciente = new Paciente(
+                "Juanito",
+                "Perez",
+                "12345678-9",
+                3,
+                System.currentTimeMillis() - 600000,
+                "urgencia_adulto"); // Hace 10 minutos
+        System.out.println("Paciente: " + paciente);
+        System.out.println("Tiempo de espera: " + paciente.tiempoEsperaActual() + " minutos");
+        paciente.registrarCambio("Cambio de categoria a C2");
+        System.out.println("Último cambio: " + paciente.obtenerUltimoCambio());
     }
 }
