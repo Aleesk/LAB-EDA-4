@@ -76,8 +76,8 @@ public class Paciente {
     }
 
     // Métodos
-    public long tiempoEsperaActual() {
-        return (System.currentTimeMillis() / 1000 / 60) - (tiempoLlegada / 1000 / 60);
+    public long tiempoEsperaActual(long tiempoActual) {
+        return (tiempoActual - tiempoLlegada) / 1000 / 60;
     }
 
     public void registrarCambio(String descripcion) {
@@ -103,7 +103,7 @@ public class Paciente {
                 System.currentTimeMillis() - 600000,
                 "urgencia_adulto"); // Hace 10 minutos
         System.out.println("Paciente: " + paciente);
-        System.out.println("Tiempo de espera: " + paciente.tiempoEsperaActual() + " minutos");
+        System.out.println("Tiempo de espera: " + paciente.tiempoEsperaActual(System.currentTimeMillis()) + " minutos");
         paciente.registrarCambio("Cambio de categoria a C2");
         System.out.println("Último cambio: " + paciente.obtenerUltimoCambio());
     }

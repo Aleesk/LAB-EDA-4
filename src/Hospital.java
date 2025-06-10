@@ -10,6 +10,9 @@ public class Hospital {
         pacientesTotales = new HashMap<>();
         colaAtencion = new PriorityQueue<>(Comparator.comparingInt(Paciente::getCategoria).thenComparingLong(Paciente::getTiempoLlegada));
         areasAtencion = new HashMap<>();
+        areasAtencion.put("urgencia_adulto", new AreaAtencion("urgencia_adulto", 10));
+        areasAtencion.put("infantil", new AreaAtencion("infantil", 5));
+        areasAtencion.put("SAPU", new AreaAtencion("SAPU", 8));
         pacientesAtendidos = new ArrayList<>();
     }
 
@@ -52,9 +55,6 @@ public class Hospital {
 
     public static void main(String[] args) {
         Hospital hospital = new Hospital();
-        hospital.areasAtencion.put("urgencia_adulto", new AreaAtencion("urgencia_adulto", 10));
-        hospital.areasAtencion.put("infantil", new AreaAtencion("infantil", 5));
-        hospital.areasAtencion.put("SAPU", new AreaAtencion("SAPU", 8));
         Paciente p1 = new Paciente("Juanito", "Perez", "12345678-9", 3, System.currentTimeMillis() - 50000, "urgencia_adulto");
         Paciente p2 = new Paciente("Martina", "Rodriguez", "98765432-1", 1, System.currentTimeMillis() - 600000, "urgencia_adulto");
         hospital.registrarPaciente(p1);

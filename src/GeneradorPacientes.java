@@ -16,7 +16,7 @@ public class GeneradorPacientes {
         for (int i = 0; i < n; i++) {
             String nombre = nombres[random.nextInt(nombres.length)];
             String apellido = apellidos[random.nextInt(apellidos.length)];
-            String id = "ID" +  i;
+            String id = "ID-"+ i;
             int categoria = generarCategoria(random);
             long tiempoLlegada = timestampInicio + (i * 600 * 1000);
             String area = areas[random.nextInt(areas.length)];
