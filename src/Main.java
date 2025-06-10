@@ -1,3 +1,4 @@
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,8 +26,14 @@ public class Main {
         pacientes = generador.generarPacientes(200, timestampInicio);
         simulador = new SimuladorUrgencia(hospital, pacientes);
         simulador.simular(200);
-        System.out.println("Pacientes que excedieron tiempo (200 pacientes): " + simulador.obtenerExcedieronTiempo());
-        //Falta revisar bien el tema de qué categorías se ven más afectadas en términos de demora, ya que aqui imprime todo lo del paciente
+
+        Map<Integer, Integer> categoriasExcedidas = new HashMap<>();
+        for (int i = 1; i <= 5; i++) categoriasExcedidas.put(i, 0);
+
+        for (Paciente paciente : simulador.obtenerExcedieronTiempo())
+            categoriasExcedidas.put(paciente.getCategoria(), categoriasExcedidas.get(paciente.getCategoria()) + 1);
+
+        System.out.println("Categorías más afectadas por demora: " + categoriasExcedidas);
 
         // Prueba 4: Cambio de categoría (C3 a C1)
         hospital = new Hospital();
