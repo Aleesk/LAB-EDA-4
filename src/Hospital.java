@@ -6,21 +6,20 @@ public class Hospital {
     private final Map<String, AreaAtencion> areasAtencion;
     private final List<Paciente> pacientesAtendidos;
 
-    public Hospital() {
+    public Hospital(int capacidadMax) {
         pacientesTotales = new HashMap<>();
         colaAtencion = new PriorityQueue<>(Comparator.comparingInt(Paciente::getCategoria).thenComparingLong(Paciente::getTiempoLlegada));
         areasAtencion = new HashMap<>();
-        areasAtencion.put("urgencia_adulto", new AreaAtencion("urgencia_adulto", 1));
-        areasAtencion.put("infantil", new AreaAtencion("infantil", 1));
-        areasAtencion.put("SAPU", new AreaAtencion("SAPU", 1));
+        areasAtencion.put("urgencia_adulto", new AreaAtencion("urgencia_adulto", capacidadMax));
+        areasAtencion.put("infantil", new AreaAtencion("infantil", capacidadMax));
+        areasAtencion.put("SAPU", new AreaAtencion("SAPU", capacidadMax));
         pacientesAtendidos = new ArrayList<>();
     }
 
     public void registrarPaciente(Paciente paciente) {
         pacientesTotales.put(paciente.getId(), paciente);
         colaAtencion.offer(paciente);
-        AreaAtencion areaAtencion = areasAtencion.get(paciente.getArea());
-        areaAtencion.ingresarPaciente(paciente);
+        areasAtencion.get(paciente.getArea()).ingresarPaciente(paciente);
     }
 
     public void reasignarCategoria(String id, int nuevaCategoria) {
@@ -64,8 +63,16 @@ public class Hospital {
         return pacientesAtendidos.size();
     }
 
+    public int getColaPacientes() {
+        return colaAtencion.size();
+    }
+
+    public Map<String, AreaAtencion> getAreasAtencion() {
+        return areasAtencion;
+    }
+
     public static void main(String[] args) {
-        Hospital hospital = new Hospital();
+        Hospital hospital = new Hospital(2);
         Paciente p1 = new Paciente("Juanito", "Perez", "12345678-9", 3, System.currentTimeMillis() - 50000, "urgencia_adulto");
         Paciente p2 = new Paciente("Martina", "Rodriguez", "98765432-1", 1, System.currentTimeMillis() - 600000, "urgencia_adulto");
         hospital.registrarPaciente(p1);

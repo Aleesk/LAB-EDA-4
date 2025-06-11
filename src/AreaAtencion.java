@@ -20,11 +20,13 @@ public class AreaAtencion {
     }
 
     public void ingresarPaciente(Paciente p) {
-        if (!estaSaturada()) pacientesHeap.add(p);
+        if (!estaSaturada()) {
+            pacientesHeap.add(p);
+        }
     }
 
     public Paciente atenderPaciente() {
-        return pacientesHeap.isEmpty() ? null : pacientesHeap.poll();
+        return pacientesHeap.isEmpty() ? null : pacientesHeap.remove();
     }
 
     public boolean estaSaturada() {
@@ -36,7 +38,7 @@ public class AreaAtencion {
     }
 
     public static void main(String[] args) {
-        AreaAtencion area = new AreaAtencion("urgencia_adulto", 5);
+        AreaAtencion area = new AreaAtencion("urgencia_adulto", 1);
         Paciente p1 = new Paciente("Juanito", "Perez", "12345678-9", 3, System.currentTimeMillis(), "urgencia_adulto");
         Paciente p2 = new Paciente("Martina", "Rodriguez", "98765432-1", 1, System.currentTimeMillis() - 600000, "urgencia_adulto");
         area.ingresarPaciente(p1);
