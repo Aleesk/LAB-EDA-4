@@ -45,7 +45,7 @@ public class Pruebas {
             double prom = tiempos.stream().mapToLong(Long::longValue).average().orElse(0.0);
             promedioFinal.put(cat, prom);
         }
-        System.out.println("Promedios de espera por categoría (15 runs): " + promedioFinal);
+        System.out.println("Promedios de espera por categoría (15 simulaciones): " + promedioFinal);
 
         // Prueba 3: Saturación del sistema (200 pacientes)
         System.out.println("------ Prueba 3 -------");
@@ -55,20 +55,14 @@ public class Pruebas {
         simulador.simular(200);
 
         Map<Integer, Integer> pacientesDemorados = new HashMap<>();
-        Map<Integer, Integer> pacientesNoAtendidos = new HashMap<>();
 
         for (int i = 1; i <= 5; i++) {
             pacientesDemorados.put(i, 0);
-            pacientesNoAtendidos.put(i, 0);
         }
 
         for (Paciente paciente : simulador.obtenerExcedieronTiempo()) {
-            int cat = paciente.getCategoria();
-            if (paciente.getEstado().equals("atendido")) {
-                pacientesDemorados.put(cat, pacientesDemorados.get(cat) + 1);
-            } else {
-                pacientesNoAtendidos.put(cat, pacientesNoAtendidos.get(cat) + 1);
-            }
+            int categoria = paciente.getCategoria();
+            pacientesDemorados.put(categoria, pacientesDemorados.get(categoria) + 1);
         }
 
         System.out.println("Pacientes que excedieron el tiempo de atención (200 pacientes):");
