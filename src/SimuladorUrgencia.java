@@ -30,13 +30,12 @@ public class SimuladorUrgencia {
         for (int minuto = 0; minuto < minutosDia; minuto++) {
             tiempoActual = timestampInicio + (minuto * 60 * 1000);
 
-            if (minuto % 10 == 0 && pacienteIndex < pacientesPorDia) {
+            if (minuto >= 10 && minuto % 10 == 0 && pacienteIndex < pacientesPorDia) {
                 hospital.registrarPaciente(pacientes.get(pacienteIndex));
                 contadorIngresos++;
                 pacienteIndex++;
             }
-
-            if (minuto % 15 == 0) {
+            if (minuto > 0 && minuto % 15 == 0) {
                 Paciente p = hospital.atenderSiguiente();
                 if (p != null) {
                     registrarTiempoEspera(p, tiempoActual);
@@ -44,7 +43,7 @@ public class SimuladorUrgencia {
             }
 
             if (contadorIngresos >= 3) {
-                for (int i = 0; i < 2; i++) {
+                for (int i = 0; i < 1; i++) {
                     Paciente p = hospital.atenderSiguiente();
                     if (p != null) {
                         registrarTiempoEspera(p, tiempoActual);
@@ -52,11 +51,8 @@ public class SimuladorUrgencia {
                 }
                 contadorIngresos = 0;
             }
-
-            // Evaluar pacientes que exceden el tiempo de espera permitido
             verificarExcedidos(tiempoActual);
         }
-
         this.tiempoFinalSimulacion = timestampInicio + ((minutosDia - 1) * 60 * 1000);
     }
 
@@ -64,15 +60,13 @@ public class SimuladorUrgencia {
         verificarCategoriaExcedida(1, 0, tiempoActual);
         verificarCategoriaExcedida(2, 30, tiempoActual);
         verificarCategoriaExcedida(3, 90, tiempoActual);
-        verificarCategoriaExcedida(4, 180, tiempoActual);
+        verificarCategoriaExcedida(4, 120, tiempoActual);
     }
 
     private void verificarCategoriaExcedida(int categoria, int tiempoMaximo, long tiempoActual) {
-        for (Paciente p : hospital.obtenerPacientesPorCategoria(categoria)) {
-            if (p.tiempoEsperaActual(tiempoActual) > tiempoMaximo && !excedieronTiempo.contains(p)) {
+        for (Paciente p : hospital.obtenerPacientesPorCategoria(categoria))
+            if (p.tiempoEsperaActual(tiempoActual) > tiempoMaximo && !excedieronTiempo.contains(p))
                 excedieronTiempo.add(p);
-            }
-        }
     }
 
     private void registrarTiempoEspera(Paciente p, long tiempoActual) {
@@ -105,6 +99,6 @@ public class SimuladorUrgencia {
         SimuladorUrgencia simulador = new SimuladorUrgencia(hospital, pacientes);
         simulador.simular(20);
         System.out.println("Promedios de espera: " + simulador.obtenerPromediosEspera());
-        System.out.println("Pacientes que excedieron tiempo: " + simulador.obtenerExcedieronTiempo());
+        System.out.println("Pacientes que excedieron tiempo: " + simulador.obtenerExcedieronTiempo().size());
     }
 }

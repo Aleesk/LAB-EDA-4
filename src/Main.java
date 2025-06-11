@@ -17,9 +17,10 @@ public class Main {
             System.out.println("Tiempo de espera C4: " + c4Paciente.tiempoEsperaActual(tiempoFinal) + " minutos");
         }
 
-        // Prueba 2: Promedio por categoría (15 simulaciones)
+        // Prueba 2: Promedio por categoría (Realizar 15 simulaciones)
         Map<Integer, Double> promedios = simulador.obtenerPromediosEspera();
-        System.out.println("Promedios de espera por categoría: " + promedios);
+        System.out.println("Promedios de espera por categoría (100 pacientes): " + promedios);
+        System.out.println("Total de pacientes atendidos: " + hospital.getTotalPacientesAtendidos());
 
         // Prueba 3: Saturación del sistema (200 pacientes)
         hospital = new Hospital();
@@ -33,7 +34,8 @@ public class Main {
         for (Paciente paciente : simulador.obtenerExcedieronTiempo())
             categoriasExcedidas.put(paciente.getCategoria(), categoriasExcedidas.get(paciente.getCategoria()) + 1);
 
-        System.out.println("Categorías más afectadas por demora: " + categoriasExcedidas);
+        System.out.println("Categorías más afectadas por demora (200 pacientes): " + categoriasExcedidas);
+        System.out.println("Se atendieron " + hospital.getTotalPacientesAtendidos() + " pacientes de 200 posibles.");
 
         // Prueba 4: Cambio de categoría (C3 a C1)
         hospital = new Hospital();

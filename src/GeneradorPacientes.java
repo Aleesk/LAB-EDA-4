@@ -35,11 +35,11 @@ public class GeneradorPacientes {
 
     private int generarCategoria(Random rand) {
         double random = rand.nextDouble();
-        double acum = 0;
+        double acumulado = 0;
         double[] probabilidades = {0.10, 0.15, 0.18, 0.27, 0.30};
         for (int i = 0; i < probabilidades.length; i++) {
-            acum += probabilidades[i];
-            if (random <= acum) return i + 1;
+            acumulado += probabilidades[i];
+            if (random <= acumulado) return i + 1;
         }
         return 5;
     }

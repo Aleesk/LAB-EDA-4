@@ -10,15 +10,17 @@ public class Hospital {
         pacientesTotales = new HashMap<>();
         colaAtencion = new PriorityQueue<>(Comparator.comparingInt(Paciente::getCategoria).thenComparingLong(Paciente::getTiempoLlegada));
         areasAtencion = new HashMap<>();
-        areasAtencion.put("urgencia_adulto", new AreaAtencion("urgencia_adulto", 10));
-        areasAtencion.put("infantil", new AreaAtencion("infantil", 5));
-        areasAtencion.put("SAPU", new AreaAtencion("SAPU", 8));
+        areasAtencion.put("urgencia_adulto", new AreaAtencion("urgencia_adulto", 1));
+        areasAtencion.put("infantil", new AreaAtencion("infantil", 1));
+        areasAtencion.put("SAPU", new AreaAtencion("SAPU", 1));
         pacientesAtendidos = new ArrayList<>();
     }
 
     public void registrarPaciente(Paciente paciente) {
         pacientesTotales.put(paciente.getId(), paciente);
         colaAtencion.offer(paciente);
+        AreaAtencion areaAtencion = areasAtencion.get(paciente.getArea());
+        areaAtencion.ingresarPaciente(paciente);
     }
 
     public void reasignarCategoria(String id, int nuevaCategoria) {
@@ -32,14 +34,19 @@ public class Hospital {
     }
 
     public Paciente atenderSiguiente() {
-        Paciente paciente = colaAtencion.poll();
+        if (colaAtencion.isEmpty()) return null;
+        Paciente paciente = colaAtencion.peek();
         if (paciente == null) return null;
+
+        AreaAtencion areaAtencion = obtenerArea(paciente.getArea());
+        if (areaAtencion == null || areaAtencion.estaSaturada()) {
+            return null;
+        }
+
+        paciente = colaAtencion.poll();
         paciente.setEstado("atendido");
         pacientesAtendidos.add(paciente);
-        AreaAtencion areaAtencion = areasAtencion.get(paciente.getArea());
-        if (areaAtencion == null) return null;
-        areaAtencion.ingresarPaciente(paciente);
-
+        areaAtencion.atenderPaciente();
         return paciente;
     }
 
@@ -51,6 +58,10 @@ public class Hospital {
 
     public AreaAtencion obtenerArea(String area) {
         return areasAtencion.get(area);
+    }
+
+    public int getTotalPacientesAtendidos() {
+        return pacientesAtendidos.size();
     }
 
     public static void main(String[] args) {
