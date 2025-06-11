@@ -75,16 +75,6 @@ public class SimuladorUrgencia {
                     excedieronTiempo.add(p);
                 }
             }
-
-            for (AreaAtencion area : hospital.getAreasAtencion().values()) {
-                for (Paciente p : area.obtenerPacientesPorHeapSort()) {
-                    if (p.getCategoria() == categoria && p.getEstado().equals("en_espera") &&
-                            p.tiempoEsperaActual(tiempoActual) > tiemposMaximos[categoria - 1] &&
-                            !excedieronTiempo.contains(p)) {
-                        excedieronTiempo.add(p);
-                    }
-                }
-            }
         }
     }
 
